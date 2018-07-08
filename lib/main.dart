@@ -68,11 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
           return Dismissible(
             key: Key(currentTask.notificationID.toString()),
             onDismissed: (direction) {
-              reminders.removeAt(index);
+              reminders.remove(currentTask);
+              writeChangesToFile();
               cancelSpecificReminder(currentTask);
               Scaffold.of(context).showSnackBar(SnackBar(content: Text('Removed ' + ' "${currentTask.cardTitle}" ')));
-              writeChangesToFile();
-              print(reminders);
             },
             background: Container(color: Colors.transparent),
             child: Padding(
@@ -104,6 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      taskList = getTaskList();
+    });
     return new Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
