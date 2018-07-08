@@ -44,7 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget taskList;
 
   Future<String> getReminders() async {
-    print('hello');
     SharedPreferences sp = await SharedPreferences.getInstance();
     if (sp.getString(reminderKey) != null) {
       return sp.getString(reminderKey);
