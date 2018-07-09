@@ -253,13 +253,8 @@ class _AddTaskState extends State<AddTask> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 10.0,
-          centerTitle: true,
-          title: Text(
-            'Add Reminder',
-            style: TextStyle(color: Colors.black, fontSize: 26.0, fontWeight: FontWeight.w400),
-          ),
+          title: Text('Add Task'),
+          backgroundColor: _previewCardColor,
         ),
         body: new Padding(
           padding: EdgeInsets.all(12.0),
@@ -425,7 +420,7 @@ class _AddTaskState extends State<AddTask> {
                           reminders.add(newReminder); //Add new reminder to current list of reminders
                           generateNotification(newReminder); //Set a notification based on this reminder
                           writeChangesToFile(); //Migrate changes to local storage
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage())); //Navigate back to home screen
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage())); //Navigate back to home screen
                         },
                 ),
               ),
