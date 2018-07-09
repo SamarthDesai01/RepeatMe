@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final String reminderKey = 'userReminders';
 List<Reminder> reminders = [];
+Color appBarColor = Colors.blue;
 
 void main() {
   runApp(new MyApp());
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
           iconTheme: IconThemeData(
             color: Colors.grey[800],
           )),
-      title: 'Repeat Me!',
+      title: 'Repeat Me',
       home: new MyHomePage(title: 'Repeat Me'),
     );
   }
@@ -61,6 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
     if (reminders.length == 0) {
       return Text('Add a Reminder Below!');
     } else {
+      setState(() {
+        appBarColor = reminders[0].cardColor;
+      });
       return ListView.builder(
         itemCount: reminders.length,
         itemBuilder: (context, index) {
@@ -72,6 +76,13 @@ class _MyHomePageState extends State<MyHomePage> {
               writeChangesToFile();
               cancelSpecificReminder(currentTask);
               Scaffold.of(context).showSnackBar(SnackBar(content: Text('Removed ' + ' "${currentTask.cardTitle}" ')));
+              setState(() {
+                if (reminders.length == 0) {
+                  appBarColor = Colors.blue;
+                } else {
+                  appBarColor = reminders[0].cardColor;
+                }
+              });
             },
             background: Container(color: Colors.transparent),
             child: Padding(
@@ -108,13 +119,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     return new Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 10.0,
+        backgroundColor: appBarColor,
+        elevation: 3.0,
         title: Text(
-          'Repeat Me!',
-          style: TextStyle(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.w400),
+          'Tasks',
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
         ),
-        centerTitle: true,
+        centerTitle: false,
+        automaticallyImplyLeading: false, //Removes the back button from appearing
       ),
       body: new Padding(
         padding: EdgeInsets.all(12.0),
