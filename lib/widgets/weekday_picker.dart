@@ -80,6 +80,33 @@ class WeekdayPicker extends StatefulWidget {
     _iconColor = newColor;
   }
 
+  //Reset all variables to their initial disabled, starting values
+  void resetState() {
+    _sundayColor = Colors.grey;
+    _sundayEnable = false;
+
+    _mondayColor = Colors.grey;
+    _mondayEnable = false;
+
+    _tuesdayColor = Colors.grey;
+    _tuesdayEnable = false;
+
+    _wednesdayColor = Colors.grey;
+    _wednesdayEnable = false;
+
+    _thursdayColor = Colors.grey;
+    _thursdayEnable = false;
+
+    _fridayColor = Colors.grey;
+    _fridayEnable = false;
+
+    _saturdayColor = Colors.grey;
+    _saturdayEnable = false;
+
+    _iconColor = Colors.grey[400];
+    _iconGrey = Colors.grey[400];
+  }
+
   @override
   _WeekdayPickerState createState() => new _WeekdayPickerState();
 }
