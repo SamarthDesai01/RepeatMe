@@ -192,13 +192,16 @@ class _AddTaskState extends State<AddTask> {
       );
     } else if (option == 2) {
       return Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Icon(
             Icons.date_range,
             color: _previewCardColor,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 134.0),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+            ),
           ),
           RaisedButton(
             color: _previewCardColor,
@@ -303,7 +306,7 @@ class _AddTaskState extends State<AddTask> {
                   ),
                   new Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 70.0),
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
                     ),
                   ),
                   new ChoiceChip(
@@ -363,67 +366,77 @@ class _AddTaskState extends State<AddTask> {
                     Icons.color_lens,
                     color: _previewCardColor,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 312.0),
-                  ),
                   Expanded(
-                    child: RaisedButton(
-                      color: _previewCardColor,
-                      shape: CircleBorder(),
-                      onPressed: () {
-                        Color startColor;
-                        Future<Color> askedToLead() async => await showDialog(
-                              context: context,
-                              child: new SimpleDialog(
-                                title: const Text('Select color'),
-                                children: <Widget>[
-                                  new ColorPicker(
-                                    type: MaterialType.transparency,
-                                    onColor: (color) {
-                                      setState(() {
-                                        _previewCardColor = color;
-                                        picker.reDraw(color); //Update colors to reflect new picked color
-                                      });
-                                      Navigator.pop(context, color);
-                                    },
-                                    currentColor: startColor,
-                                  ),
-                                ],
-                              ),
-                            );
-
-                        askedToLead(); //Call the color picker dialog
-                      },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2.0),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                  ),
+                  RaisedButton(
+                    color: _previewCardColor,
+                    child: Text(
+                      'Pick Color',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Color startColor;
+                      Future<Color> askedToLead() async => await showDialog(
+                            context: context,
+                            child: new SimpleDialog(
+                              title: const Text('Pick color'),
+                              children: <Widget>[
+                                new ColorPicker(
+                                  type: MaterialType.transparency,
+                                  onColor: (color) {
+                                    setState(() {
+                                      _previewCardColor = color;
+                                      picker.reDraw(color); //Update colors to reflect new picked color
+                                    });
+                                    Navigator.pop(context, color);
+                                  },
+                                  currentColor: startColor,
+                                ),
+                              ],
+                            ),
+                          );
+
+                      askedToLead(); //Call the color picker dialog
+                    },
                   )
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 12.0),
-                child: RaisedButton(
-                  //Submit Button
-                  color: _previewCardColor,
-                  disabledTextColor: Colors.black26,
-                  disabledColor: Colors.grey,
-                  child: Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.white),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 24.0),
+                  child: Center(
+                    child: RaisedButton(
+                      //Submit Button
+                      color: _previewCardColor,
+                      disabledTextColor: Colors.black26,
+                      disabledColor: Colors.grey,
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: !(_currentTaskSubText.length > 1) //If button subtext exists, so does valid input, thus enable the button if true
+                          ? null
+                          : () async {
+                              var uniqueID = DateTime.now().hashCode;
+                              if (_whenToRepeat == null) {
+                                //Only initialized if specific date chosen, make sure to assign it a value so it doesn't cause JSON parsing issues
+                                _whenToRepeat = DateTime.now().toLocal();
+                              }
+                              var newReminder = Reminder(_currentTaskName, _currentTaskSubText, _previewCardColor, _previewCardAccent, _choiceChipValue,
+                                  picker.getEnabledDays(), _repeatEveryNumber, _repeatStartDate, _whenToRepeat, _reminderTime, uniqueID);
+                              reminders.add(newReminder); //Add new reminder to current list of reminders
+                              generateNotification(newReminder); //Set a notification based on this reminder
+                              writeChangesToFile(); //Migrate changes to local storage
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage())); //Navigate back to home screen
+                            },
+                    ),
                   ),
-                  onPressed: !(_currentTaskSubText.length > 1) //If button subtext exists, so does valid input, thus enable the button if true
-                      ? null
-                      : () async {
-                          var uniqueID = DateTime.now().hashCode;
-                          if (_whenToRepeat == null) {
-                            //Only initialized if specific date chosen, make sure to assign it a value so it doesn't cause JSON parsing issues
-                            _whenToRepeat = DateTime.now().toLocal();
-                          }
-                          var newReminder = Reminder(_currentTaskName, _currentTaskSubText, _previewCardColor, _previewCardAccent, _choiceChipValue, picker.getEnabledDays(),
-                              _repeatEveryNumber, _repeatStartDate, _whenToRepeat, _reminderTime, uniqueID);
-                          reminders.add(newReminder); //Add new reminder to current list of reminders
-                          generateNotification(newReminder); //Set a notification based on this reminder
-                          writeChangesToFile(); //Migrate changes to local storage
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage())); //Navigate back to home screen
-                        },
                 ),
               ),
             ],
