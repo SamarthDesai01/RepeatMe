@@ -13,7 +13,7 @@ class Reminder {
 
   List<bool> _enabledDays; //Boolean array from weekday picker that lists which buttons are enabled
   int _repeatEvery; //Number from text entry for repeating every certain number of days
-  DateTime _repeatStartDate; //Date to start repeating reminders
+  DateTime _repeatStartDate; //Date to start repeating reminders for number based reminders, defaults to day of creation, but a time of 12:00:00AM
   DateTime _specificDate; //Specific DateTime object
   DateTime _reminderTime; //Scheduled time to show reminders, still need to implement
 

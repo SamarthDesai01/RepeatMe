@@ -65,10 +65,9 @@ void generateNotification(Reminder reminder) async {
           repeatStartDate,
           platformChannelSpecifics);
 
-      repeatStartDate = DateTime(repeatStartDate.year, repeatStartDate.month, repeatStartDate.day);
+      repeatStartDate = DateTime(repeatStartDate.year, repeatStartDate.month, repeatStartDate.day); //Reset startDate time wise so that all notifs fire at 12:00:00AM,
 
       for (int i = 0; i < repeatNotifCount; i++) {
-        print('entered loop');
         notificationID++; //Keep this here, or else notifIDs will collide and cause the last warning notif to not display.
         repeatStartDate = repeatStartDate.add(Duration(days: repeatEvery));
         print(repeatStartDate.toString());
