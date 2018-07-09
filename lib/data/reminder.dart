@@ -15,7 +15,7 @@ class Reminder {
   int _repeatEvery; //Number from text entry for repeating every certain number of days
   DateTime _repeatStartDate; //Date to start repeating reminders for number based reminders, defaults to day of creation, but a time of 12:00:00AM
   DateTime _specificDate; //Specific DateTime object
-  DateTime _reminderTime; //Scheduled time to show reminders, still need to implement
+  DateTime _reminderTime; //Scheduled time to show reminders, for number and date based this holds complete information of start date and time, else only time of reminder
 
   int _notificationID; //Unique id to use for this Reminder object, usually passed in as a UNIX timestamp
 
