@@ -86,7 +86,6 @@ class _AddTaskState extends State<AddTask> {
   //Method for dynamically generating widgets based on which chip is selected
   Widget getPicker(int option) {
     if (option == 0) {
-      //Display the weekday picker
       return Listener(
         //Listen for touch events on the day picker
         behavior: HitTestBehavior.translucent,
@@ -226,6 +225,7 @@ class _AddTaskState extends State<AddTask> {
     _previewCardAccent = Colors.white10; //Set to transparent white so InkWells for all taps look normal
     _choiceChipValue = 0; //Set to 0, so that the weekday chip is enabled by default
 
+    picker.resetState();
     picker.reDraw(_previewCardColor); //Redraw the picker with enabled
 
     _repeatEveryIcon = Colors.grey;
@@ -246,8 +246,6 @@ class _AddTaskState extends State<AddTask> {
     } else if (_choiceChipValue == 1) {
       _currentTaskSubText;
     }
-
-    picker.reDraw(_previewCardColor);
 
     return Theme(
       data: ThemeData(
@@ -433,7 +431,7 @@ class _AddTaskState extends State<AddTask> {
                               reminders.add(newReminder); //Add new reminder to current list of reminders
                               generateNotification(newReminder); //Set a notification based on this reminder
                               writeChangesToFile(); //Migrate changes to local storage
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage())); //Navigate back to home screen
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage(), maintainState: false)); //Navigate back to home screen
                             },
                     ),
                   ),
