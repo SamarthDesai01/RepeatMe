@@ -124,21 +124,31 @@ class _AddTaskState extends State<AddTask> {
   //Method for dynamically generating widgets based on which chip is selected
   Widget getPicker(int option) {
     if (option == 0) {
-      return Listener(
-        //Listen for touch events on the day picker
-        behavior: HitTestBehavior.translucent,
-        onPointerDown: (p) {
-          //If tapped redraw
-          setState(() {
-            //Force a redraw of the current screen
-          });
-        },
-        onPointerUp: (p) {
-          setState(() {
-            //Force a redraw of the current screen
-          });
-        },
-        child: picker, //Hold the day picker
+      return Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 2.0),
+          ),
+          Listener(
+            //Listen for touch events on the day picker
+            behavior: HitTestBehavior.translucent,
+            onPointerDown: (p) {
+              //If tapped redraw
+              setState(() {
+                //Force a redraw of the current screen
+              });
+            },
+            onPointerUp: (p) {
+              setState(() {
+                //Force a redraw of the current screen
+              });
+            },
+            child: picker, //Hold the day picker
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 4.0),
+          ),
+        ],
       );
     } else if (option == 1) {
       //Number entry
@@ -230,26 +240,28 @@ class _AddTaskState extends State<AddTask> {
         ],
       );
     } else if (option == 2) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Icon(
-            Icons.date_range,
-            color: _previewCardColor,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
+      return Container(
+        child: Row(
+          //crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.date_range,
+              color: _previewCardColor,
             ),
-          ),
-          RaisedButton(
-            color: _previewCardColor,
-            child: Text('Pick Date', style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              _selectDate(context, _specificDayChipIndex);
-            },
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+              ),
+            ),
+            RaisedButton(
+              color: _previewCardColor,
+              child: Text('Pick Date', style: TextStyle(color: Colors.white, fontSize: 14.5)),
+              onPressed: () {
+                _selectDate(context, _specificDayChipIndex);
+              },
+            ),
+          ],
+        ),
       );
     } else {
       return null;
@@ -391,14 +403,14 @@ class _AddTaskState extends State<AddTask> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: 26.0),
+                padding: EdgeInsets.only(top: 14.0),
               ),
               Container(
                 //Dynamically create the picker widget based on the selected chip
                 child: getPicker(_choiceChipValue),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 26.0),
+                padding: EdgeInsets.only(top: 12.0),
               ),
               Row(
                 children: <Widget>[
