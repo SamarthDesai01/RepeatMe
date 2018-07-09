@@ -25,30 +25,14 @@ Color _iconColor = Colors.grey[400];
 Color _iconGrey = Colors.grey[400];
 
 List<bool> getEnabledDays() {
-  return [
-    _sundayEnable,
-    _mondayEnable,
-    _tuesdayEnable,
-    _wednesdayEnable,
-    _thursdayEnable,
-    _fridayEnable,
-    _saturdayEnable
-  ];
+  return [_sundayEnable, _mondayEnable, _tuesdayEnable, _wednesdayEnable, _thursdayEnable, _fridayEnable, _saturdayEnable];
 }
 
 class WeekdayPicker extends StatefulWidget {
   WeekdayPicker();
   //Return an array of which days are enabled
   List<bool> getEnabledDays() {
-    return [
-      _sundayEnable,
-      _mondayEnable,
-      _tuesdayEnable,
-      _wednesdayEnable,
-      _thursdayEnable,
-      _fridayEnable,
-      _saturdayEnable
-    ];
+    return [_sundayEnable, _mondayEnable, _tuesdayEnable, _wednesdayEnable, _thursdayEnable, _fridayEnable, _saturdayEnable];
   }
 
   //Return a string to let the user know which days the reminder will repeat
@@ -102,15 +86,7 @@ class WeekdayPicker extends StatefulWidget {
 
 class _WeekdayPickerState extends State<WeekdayPicker> {
   List<bool> getEnabledDays() {
-    return [
-      _sundayEnable,
-      _mondayEnable,
-      _tuesdayEnable,
-      _wednesdayEnable,
-      _thursdayEnable,
-      _fridayEnable,
-      _saturdayEnable
-    ];
+    return [_sundayEnable, _mondayEnable, _tuesdayEnable, _wednesdayEnable, _thursdayEnable, _fridayEnable, _saturdayEnable];
   }
 
   //Returns boolean letting us know if no weekdays are selected
@@ -146,179 +122,185 @@ class _WeekdayPickerState extends State<WeekdayPicker> {
           padding: EdgeInsets.symmetric(horizontal: 4.0),
         ),
         Expanded(
-          child: RaisedButton(
-            color: _sundayColor,
-            shape: CircleBorder(),
-            onPressed: () {
-              setState(() {
-                if (_sundayEnable == false) {
-                  _sundayColor = Theme.of(context).primaryColor;
-                  _sundayEnable = true;
-                  _iconColor = Theme.of(context).primaryColor;
-                } else if (_sundayEnable == true) {
-                  _sundayColor = Colors.grey;
-                  _sundayEnable = false;
-                  if (iconShouldBeGray()) {
-                    _iconColor = _iconGrey;
-                  }
-                }
-                print(getEnabledDays());
-              });
-            },
-            child: Text(
-              'S',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        Expanded(
-          child: RaisedButton(
-            color: _mondayColor,
-            shape: CircleBorder(),
-            onPressed: () {
-              setState(() {
-                if (_mondayEnable == false) {
-                  _mondayColor = Theme.of(context).primaryColor;
-                  _mondayEnable = true;
-                  _iconColor = Theme.of(context).primaryColor;
-                } else {
-                  _mondayColor = Colors.grey;
-                  _mondayEnable = false;
-                  if (iconShouldBeGray()) {
-                    _iconColor = _iconGrey;
-                  }
-                }
-              });
-            },
-            child: Text(
-              'M',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        Expanded(
-          child: RaisedButton(
-            color: _tuesdayColor,
-            shape: CircleBorder(),
-            onPressed: () {
-              setState(() {
-                if (_tuesdayEnable == false) {
-                  _tuesdayColor = Theme.of(context).primaryColor;
-                  _tuesdayEnable = true;
-                  _iconColor = Theme.of(context).primaryColor;
-                } else {
-                  _tuesdayColor = Colors.grey;
-                  _tuesdayEnable = false;
-                  if (iconShouldBeGray()) {
-                    _iconColor = _iconGrey;
-                  }
-                }
-              });
-            },
-            child: Text(
-              'T',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        Expanded(
-          child: RaisedButton(
-            color: _wednesdayColor,
-            shape: CircleBorder(),
-            onPressed: () {
-              setState(() {
-                if (_wednesdayEnable == false) {
-                  _wednesdayColor = Theme.of(context).primaryColor;
-                  _wednesdayEnable = true;
-                  _iconColor = Theme.of(context).primaryColor;
-                } else {
-                  _wednesdayColor = Colors.grey;
-                  _wednesdayEnable = false;
-                  if (iconShouldBeGray()) {
-                    _iconColor = _iconGrey;
-                  }
-                }
-              });
-            },
-            child: Text(
-              'W',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        Expanded(
-          child: RaisedButton(
-            color: _thursdayColor,
-            shape: CircleBorder(),
-            onPressed: () {
-              setState(() {
-                if (_thursdayEnable == false) {
-                  _thursdayColor = Theme.of(context).primaryColor;
-                  _thursdayEnable = true;
-                  _iconColor = Theme.of(context).primaryColor;
-                } else {
-                  _thursdayColor = Colors.grey;
-                  _thursdayEnable = false;
-                  if (iconShouldBeGray()) {
-                    _iconColor = _iconGrey;
-                  }
-                }
-              });
-            },
-            child: Text(
-              'Th',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        Expanded(
-          child: RaisedButton(
-            color: _fridayColor,
-            shape: CircleBorder(),
-            onPressed: () {
-              setState(() {
-                if (_fridayEnable == false) {
-                  _fridayColor = Theme.of(context).primaryColor;
-                  _fridayEnable = true;
-                  _iconColor = Theme.of(context).primaryColor;
-                } else {
-                  _fridayColor = Colors.grey;
-                  _fridayEnable = false;
-                  if (iconShouldBeGray()) {
-                    _iconColor = _iconGrey;
-                  }
-                }
-              });
-            },
-            child: Text(
-              'F',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        Expanded(
-          child: RaisedButton(
-            color: _saturdayColor,
-            shape: CircleBorder(),
-            onPressed: () {
-              setState(() {
-                if (_saturdayEnable == false) {
-                  _saturdayColor = Theme.of(context).primaryColor;
-                  _saturdayEnable = true;
-                  _iconColor = Theme.of(context).primaryColor;
-                } else {
-                  _saturdayColor = Colors.grey;
-                  _saturdayEnable = false;
-                  if (iconShouldBeGray()) {
-                    _iconColor = _iconGrey;
-                  }
-                }
-              });
-            },
-            child: Text(
-              'S',
-              style: TextStyle(color: Colors.white),
-            ),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: RaisedButton(
+                  color: _sundayColor,
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    setState(() {
+                      if (_sundayEnable == false) {
+                        _sundayColor = Theme.of(context).primaryColor;
+                        _sundayEnable = true;
+                        _iconColor = Theme.of(context).primaryColor;
+                      } else if (_sundayEnable == true) {
+                        _sundayColor = Colors.grey;
+                        _sundayEnable = false;
+                        if (iconShouldBeGray()) {
+                          _iconColor = _iconGrey;
+                        }
+                      }
+                      print(getEnabledDays());
+                    });
+                  },
+                  child: Text(
+                    'S',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RaisedButton(
+                  color: _mondayColor,
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    setState(() {
+                      if (_mondayEnable == false) {
+                        _mondayColor = Theme.of(context).primaryColor;
+                        _mondayEnable = true;
+                        _iconColor = Theme.of(context).primaryColor;
+                      } else {
+                        _mondayColor = Colors.grey;
+                        _mondayEnable = false;
+                        if (iconShouldBeGray()) {
+                          _iconColor = _iconGrey;
+                        }
+                      }
+                    });
+                  },
+                  child: Text(
+                    'M',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RaisedButton(
+                  color: _tuesdayColor,
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    setState(() {
+                      if (_tuesdayEnable == false) {
+                        _tuesdayColor = Theme.of(context).primaryColor;
+                        _tuesdayEnable = true;
+                        _iconColor = Theme.of(context).primaryColor;
+                      } else {
+                        _tuesdayColor = Colors.grey;
+                        _tuesdayEnable = false;
+                        if (iconShouldBeGray()) {
+                          _iconColor = _iconGrey;
+                        }
+                      }
+                    });
+                  },
+                  child: Text(
+                    'T',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RaisedButton(
+                  color: _wednesdayColor,
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    setState(() {
+                      if (_wednesdayEnable == false) {
+                        _wednesdayColor = Theme.of(context).primaryColor;
+                        _wednesdayEnable = true;
+                        _iconColor = Theme.of(context).primaryColor;
+                      } else {
+                        _wednesdayColor = Colors.grey;
+                        _wednesdayEnable = false;
+                        if (iconShouldBeGray()) {
+                          _iconColor = _iconGrey;
+                        }
+                      }
+                    });
+                  },
+                  child: Text(
+                    'W',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RaisedButton(
+                  color: _thursdayColor,
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    setState(() {
+                      if (_thursdayEnable == false) {
+                        _thursdayColor = Theme.of(context).primaryColor;
+                        _thursdayEnable = true;
+                        _iconColor = Theme.of(context).primaryColor;
+                      } else {
+                        _thursdayColor = Colors.grey;
+                        _thursdayEnable = false;
+                        if (iconShouldBeGray()) {
+                          _iconColor = _iconGrey;
+                        }
+                      }
+                    });
+                  },
+                  child: Text(
+                    'Th',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RaisedButton(
+                  color: _fridayColor,
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    setState(() {
+                      if (_fridayEnable == false) {
+                        _fridayColor = Theme.of(context).primaryColor;
+                        _fridayEnable = true;
+                        _iconColor = Theme.of(context).primaryColor;
+                      } else {
+                        _fridayColor = Colors.grey;
+                        _fridayEnable = false;
+                        if (iconShouldBeGray()) {
+                          _iconColor = _iconGrey;
+                        }
+                      }
+                    });
+                  },
+                  child: Text(
+                    'F',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RaisedButton(
+                  color: _saturdayColor,
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    setState(() {
+                      if (_saturdayEnable == false) {
+                        _saturdayColor = Theme.of(context).primaryColor;
+                        _saturdayEnable = true;
+                        _iconColor = Theme.of(context).primaryColor;
+                      } else {
+                        _saturdayColor = Colors.grey;
+                        _saturdayEnable = false;
+                        if (iconShouldBeGray()) {
+                          _iconColor = _iconGrey;
+                        }
+                      }
+                    });
+                  },
+                  child: Text(
+                    'S',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
