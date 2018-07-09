@@ -27,8 +27,9 @@ void generateNotification(Reminder reminder) async {
   int repeatEvery = reminder.repeatEvery;
   DateTime repeatStartDate = reminder.repeatStartDate;
   DateTime specificDate = reminder.specificDate;
+  DateTime reminderTime = reminder.reminderTime;
 
-  Time defaultTime = Time(0, 1, 0);
+  Time defaultTime = Time(reminderTime.hour, reminderTime.minute, 0);
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
@@ -65,7 +66,7 @@ void generateNotification(Reminder reminder) async {
           repeatStartDate,
           platformChannelSpecifics);
 
-      repeatStartDate = DateTime(repeatStartDate.year, repeatStartDate.month, repeatStartDate.day); //Reset startDate time wise so that all notifs fire at 12:00:00AM,
+      repeatStartDate = reminderTime; //Reminder time contains both repeat start date and specified start time,
 
       for (int i = 0; i < repeatNotifCount; i++) {
         notificationID++; //Keep this here, or else notifIDs will collide and cause the last warning notif to not display.
@@ -82,7 +83,8 @@ void generateNotification(Reminder reminder) async {
   }
   if (reminderType == dateID) {
     //Code for specific date based reminders
-    await flutterLocalNotificationsPlugin.schedule(notificationID, notificationTitle, notificationBody, specificDate, platformChannelSpecifics);
+    print(reminderTime.toString());
+    await flutterLocalNotificationsPlugin.schedule(notificationID, notificationTitle, notificationBody, reminderTime, platformChannelSpecifics);
   }
 }
 

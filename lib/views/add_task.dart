@@ -24,12 +24,14 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   String _currentTaskName = 'Card Preview'; //Card title
   String _currentTaskSubText; //Card subtext
+  String _currentTaskSubTextNoTime; //Only used locally, text containing days, dates, numbers but not any time components. This is combined with time in updateSubText();
 
   List<bool> _enabledDays; //Store the array of bools for weekday picker's enabled days
   int _repeatEveryNumber; //Number holding the input for the 'Repeat Every' text box, used for number based reminders
   DateTime _whenToRepeat; //Hold the DateTime object for reminders on specific days, only for 'Date' use
   DateTime _repeatStartDate; //When to start number based reminders
-  DateTime _reminderTime; //Unused for now, but time to schedule reminders
+  DateTime _reminderTime; //Mainly for use for retrieving the time, but for number and date based reminders it holds complete data
+  TimeOfDay _timeFromPicker; //The raw TimeOfDay object the time picker returns
 
   Color _previewCardColor;
   Color _previewCardAccent;
@@ -41,9 +43,6 @@ class _AddTaskState extends State<AddTask> {
   int _specificDayChipIndex = 2; //Remind on a specific day
 
   WeekdayPicker picker; //Weekday picker
-
-  //Test method to display notifications
-  Future _showNotification() async {}
 
   //Method to create the datepicker dialog
   Future<Null> _selectDate(BuildContext context, int remindType) async {
@@ -63,9 +62,48 @@ class _AddTaskState extends State<AddTask> {
         if (remindType == _specificDayChipIndex) {
           //Picked a date for specific date reminders, update card subtext and specific date reminder
           _whenToRepeat = picked.toLocal(); //Update _whenToRepeat for specific date reminders
-          _currentTaskSubText = 'On ' + picked.toString().split(' ')[0]; //Update card to reflect this date
+          _currentTaskSubTextNoTime = 'On ' + picked.toString().split(' ')[0];
+          updateSubText(); //Update card to reflect this date
         }
       });
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: _timeFromPicker,
+    );
+    if (picked != null) {
+      _timeFromPicker = picked;
+      updateSubText();
+    }
+  }
+
+  DateTime getReminderTime() {
+    if (_choiceChipValue == 0) {
+      //For weekday based, return DateTime.now() + _timeFromPicker
+      return DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _timeFromPicker.hour, _timeFromPicker.minute);
+    } else if (_choiceChipValue == 1) {
+      //For number based, return _repeatStartDate + _timeFromPicker
+      return DateTime(_repeatStartDate.year, _repeatStartDate.month, _repeatStartDate.day, _timeFromPicker.hour, _timeFromPicker.minute);
+    } else if (_choiceChipValue == 2) {
+      //For date based, return _whenToRepeat + _timeFromPicker
+      return DateTime(_whenToRepeat.year, _whenToRepeat.month, _whenToRepeat.day, _timeFromPicker.hour, _timeFromPicker.minute);
+    } else {
+      return null;
+    }
+  }
+
+  //Add the time at the end of the card TODO: RENAME THIS METHOD TO BETTER REFLECT FUNCTIONALITY
+  void updateSubText() {
+    setState(() {
+      if (_timeFromPicker.hour == 0 && _timeFromPicker.minute == 0) {
+        //Current time is 12:00 AM, no need to include time text
+        _currentTaskSubText = _currentTaskSubTextNoTime;
+      } else {
+        _currentTaskSubText = _currentTaskSubTextNoTime + ' at ' + _timeFromPicker.format(context);
+      }
+    });
   }
 
   void getReminders() async {
@@ -170,11 +208,13 @@ class _AddTaskState extends State<AddTask> {
                 s = s.replaceAll('-', ''); //Trim all dashes
                 setState(() {
                   if (s == '') {
-                    _currentTaskSubText = '';
+                    _currentTaskSubTextNoTime = '';
                   } else if (s == '1') {
-                    _currentTaskSubText = "Every day";
+                    _currentTaskSubTextNoTime = "Every day";
+                    updateSubText();
                   } else {
-                    _currentTaskSubText = "Every " + s + " days";
+                    _currentTaskSubTextNoTime = "Every " + s + " days";
+                    updateSubText();
                   }
                   _repeatEveryIcon = _previewCardColor;
                 });
@@ -221,6 +261,7 @@ class _AddTaskState extends State<AddTask> {
     _currentTaskName = 'Card Preview';
     picker = new WeekdayPicker();
     _currentTaskSubText = '';
+    _currentTaskSubTextNoTime = '';
     _previewCardColor = Colors.blue; //The default theme color
     _previewCardAccent = Colors.white10; //Set to transparent white so InkWells for all taps look normal
     _choiceChipValue = 0; //Set to 0, so that the weekday chip is enabled by default
@@ -232,7 +273,7 @@ class _AddTaskState extends State<AddTask> {
     _enabledDays = picker.getEnabledDays();
     _repeatStartDate = DateTime.now().toLocal();
     _reminderTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); //Initialize reminder time with reminder time at very start of the day
-
+    _timeFromPicker = TimeOfDay(hour: 0, minute: 0); //Default to 12AM as our input from the time picker
     getReminders(); //Update our reminders array to add to later on
 
     super.initState();
@@ -242,7 +283,8 @@ class _AddTaskState extends State<AddTask> {
   Widget build(BuildContext context) {
     if (_choiceChipValue == 0) {
       //Generate the weekday picker subtext on redraw if weekdays option is selected
-      _currentTaskSubText = picker.getWeekdayString();
+      _currentTaskSubTextNoTime = picker.getWeekdayString();
+      updateSubText();
     } else if (_choiceChipValue == 1) {
       _currentTaskSubText;
     }
@@ -427,7 +469,7 @@ class _AddTaskState extends State<AddTask> {
                                 _whenToRepeat = DateTime.now().toLocal();
                               }
                               var newReminder = Reminder(_currentTaskName, _currentTaskSubText, _previewCardColor, _previewCardAccent, _choiceChipValue,
-                                  picker.getEnabledDays(), _repeatEveryNumber, _repeatStartDate, _whenToRepeat, _reminderTime, uniqueID);
+                                  picker.getEnabledDays(), _repeatEveryNumber, _repeatStartDate, _whenToRepeat, getReminderTime(), uniqueID);
                               reminders.add(newReminder); //Add new reminder to current list of reminders
                               generateNotification(newReminder); //Set a notification based on this reminder
                               writeChangesToFile(); //Migrate changes to local storage
@@ -437,6 +479,9 @@ class _AddTaskState extends State<AddTask> {
                   ),
                 ),
               ),
+              RaisedButton(onPressed: () {
+                _selectTime(context);
+              })
             ],
           ),
         ),
