@@ -117,32 +117,35 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       taskList = getTaskList();
     });
-    return new Scaffold(
-      appBar: AppBar(
-        backgroundColor: appBarColor,
-        elevation: 3.0,
-        title: Text(
-          'Tasks',
-          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+    return new WillPopScope(
+      child: new Scaffold(
+        appBar: AppBar(
+          backgroundColor: appBarColor,
+          elevation: 3.0,
+          title: Text(
+            'Tasks',
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+          ),
+          centerTitle: false,
+          automaticallyImplyLeading: false, //Removes the back button from appearing
         ),
-        centerTitle: false,
-        automaticallyImplyLeading: false, //Removes the back button from appearing
-      ),
-      body: new Padding(
-        padding: EdgeInsets.all(12.0),
-        child: Center(
-          child: taskList,
+        body: new Padding(
+          padding: EdgeInsets.all(12.0),
+          child: Center(
+            child: taskList,
+          ),
         ),
+        floatingActionButton: new FloatingActionButton(
+          backgroundColor: Colors.white,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => AddTask(), maintainState: false));
+          },
+          tooltip: 'Add Reminder',
+          elevation: 6.0,
+          child: new Icon(Icons.add, color: Colors.black),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
-      floatingActionButton: new FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddTask()));
-        },
-        tooltip: 'Add Reminder',
-        elevation: 6.0,
-        child: new Icon(Icons.add, color: Colors.black),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      onWillPop: () async => false, //User can't hit back button on this screen
     );
   }
 }
