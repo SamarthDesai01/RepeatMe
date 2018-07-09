@@ -119,8 +119,31 @@ class _AddTaskState extends State<AddTask> {
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 100.0),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40.0),
+            ),
+          ),
+          Container(
+            height: 60.0,
+            width: 54.0,
+            color: Colors.transparent,
+            child: Column(
+              children: <Widget>[
+                RaisedButton(
+                  color: _previewCardColor,
+                  shape: CircleBorder(),
+                  child: Icon(
+                    Icons.date_range,
+                    size: 20.0,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _selectDate(context, _numberChipIndex);
+                  },
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: TextField(
@@ -163,30 +186,6 @@ class _AddTaskState extends State<AddTask> {
                   _repeatEveryIcon = Colors.grey[600];
                 });
               },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10.0),
-          ),
-          Container(
-            height: 60.0,
-            width: 54.0,
-            color: Colors.transparent,
-            child: Column(
-              children: <Widget>[
-                RaisedButton(
-                  color: _previewCardColor,
-                  shape: CircleBorder(),
-                  child: Icon(
-                    Icons.date_range,
-                    size: 20.0,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    _selectDate(context, _numberChipIndex);
-                  },
-                ),
-              ],
             ),
           ),
         ],
@@ -296,13 +295,16 @@ class _AddTaskState extends State<AddTask> {
                 padding: EdgeInsets.only(top: 12.0),
               ),
               Row(
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   new Icon(
                     Icons.repeat,
                     color: _previewCardColor,
                   ),
-                  new Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 70.0),
+                  new Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 70.0),
+                    ),
                   ),
                   new ChoiceChip(
                     //Weekday Chip
