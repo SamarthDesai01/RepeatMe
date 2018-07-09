@@ -300,7 +300,7 @@ class _AddTaskState extends State<AddTask> {
         ),
         body: new Padding(
           padding: EdgeInsets.all(12.0),
-          child: Column(
+          child: ListView(
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(top: 16.0),
@@ -403,6 +403,35 @@ class _AddTaskState extends State<AddTask> {
               Row(
                 children: <Widget>[
                   Icon(
+                    Icons.access_time,
+                    color: _previewCardColor,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2.0),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                  ),
+                  RaisedButton(
+                    color: _previewCardColor,
+                    child: Text(
+                      'Pick Time',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      _selectTime(context); //Call the color picker dialog
+                    },
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 12.0),
+              ),
+              Row(
+                children: <Widget>[
+                  Icon(
                     Icons.color_lens,
                     color: _previewCardColor,
                   ),
@@ -460,7 +489,7 @@ class _AddTaskState extends State<AddTask> {
                         'Submit',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: !(_currentTaskSubText.length > 1) //If button subtext exists, so does valid input, thus enable the button if true
+                      onPressed: !(_currentTaskSubTextNoTime.length > 1) //If button subtext exists, so does valid input, thus enable the button if true
                           ? null
                           : () async {
                               var uniqueID = DateTime.now().hashCode;
@@ -479,9 +508,6 @@ class _AddTaskState extends State<AddTask> {
                   ),
                 ),
               ),
-              RaisedButton(onPressed: () {
-                _selectTime(context);
-              })
             ],
           ),
         ),
