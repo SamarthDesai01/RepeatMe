@@ -92,16 +92,13 @@ class _MyHomePageState extends State<MyHomePage> {
               cancelSpecificReminder(currentTask);
               writeChangesToFile();
               Scaffold.of(context).showSnackBar(SnackBar(
+                  duration: Duration(seconds: 2),
                   content: Text('Removed ' + ' "${currentTask.cardTitle}" '),
                   action: SnackBarAction(
                     label: 'Undo',
                     onPressed: () {
                       deepCopyBackToReminders();
-                      generateNotification(currentTask); //TODO: This will cause an onslaught of notifications if it's a repeat every number based notification
-                      //It will reschedule all the notifications since its initial creation, so to catch up it will notify the user the same number of times it has fired since
-                      //the user deleted it and undid the deletion. To get around this you would need to create an exact copy of the reminder object. But for its start date of notification
-                      //it must line up with what the next notification date should've been. You can calculate this by comparing the start date, the repeat every number, finding how many
-                      //times it should have fired and resetting the start date of the reminder object to what the next notification date of the delete notification should have been.
+                      rescheduleNotification(currentTask);
                       setState(() {
                         taskList = getTaskList();
                       });

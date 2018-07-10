@@ -113,3 +113,43 @@ void cancelSpecificReminder(Reminder remind) {
     }
   }
 }
+
+//Reschedule notifications that were undo-ed but only schedule the notifs that weren't fired yet. Keep notif ids in sync with removed task
+// so that swiping behavior still correctly cancels the appropriate notifs.
+void rescheduleNotification(Reminder remind) {
+  int remindType = remind.reminderType;
+  DateTime repeatStartDate = remind.repeatStartDate;
+  int repeatEvery = remind.repeatEvery;
+  int notificationID = remind.notificationID;
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  if (remindType == weekdayID) {
+    generateNotification(remind); //Reschedule weekday reminders by default, won't cause repeat notif bug
+  } else if (remindType == numberID) {
+    print('Found number based');
+    for (int i = 0; i < repeatNotifCount + 1; i++) {
+      print('Entered Loop');
+      print(repeatStartDate);
+      //Account for the original starting reminder so loop once more
+      //Only reschedule the remaining reminders for that cancelled notification
+      if (repeatStartDate.isAfter(DateTime.now()) && i != repeatNotifCount - 1) {
+        //Try to find the next start date
+        flutterLocalNotificationsPlugin.schedule(notificationID, remind.cardTitle, remind.cardSubText, repeatStartDate, platformChannelSpecifics);
+        print(repeatStartDate);
+      } else if (repeatStartDate.isAfter(DateTime.now()) && i == repeatNotifCount - 1) {
+        flutterLocalNotificationsPlugin.schedule(notificationID, remind.cardTitle, warningText, repeatStartDate, platformChannelSpecifics);
+      }
+      notificationID++;
+      repeatStartDate = repeatStartDate.add(Duration(days: repeatEvery)); //Increment after so that even the first initial reminder is included
+    }
+  } else if (remindType == dateID) {
+    if (repeatStartDate.isAfter(DateTime.now())) {
+      //Only reschedule this alarm if it hasn't fired yet
+      generateNotification(remind);
+    }
+  }
+}
