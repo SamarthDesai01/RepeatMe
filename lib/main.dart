@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final String reminderKey = 'userReminders';
 List<Reminder> reminders = [];
+List<Reminder> remindersCopy = [];
 Color appBarColor = Colors.blue;
 
 void main() {
@@ -58,6 +59,20 @@ class _MyHomePageState extends State<MyHomePage> {
     sp.setString(reminderKey, json.encode(reminders));
   }
 
+  void deepCopyReminders() {
+    remindersCopy = [];
+    for (int i = 0; i < reminders.length; i++) {
+      remindersCopy.add(reminders[i]);
+    }
+  }
+
+  void deepCopyBackToReminders() {
+    reminders = [];
+    for (int i = 0; i < remindersCopy.length; i++) {
+      reminders.add(remindersCopy[i]);
+    }
+  }
+
   Widget getTaskList() {
     if (reminders.length == 0) {
       return Text('Add a Reminder Below!');
@@ -72,10 +87,27 @@ class _MyHomePageState extends State<MyHomePage> {
           return Dismissible(
             key: Key(currentTask.notificationID.toString()),
             onDismissed: (direction) {
+              deepCopyReminders();
               reminders.remove(currentTask);
-              writeChangesToFile();
               cancelSpecificReminder(currentTask);
-              Scaffold.of(context).showSnackBar(SnackBar(content: Text('Removed ' + ' "${currentTask.cardTitle}" ')));
+              writeChangesToFile();
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text('Removed ' + ' "${currentTask.cardTitle}" '),
+                  action: SnackBarAction(
+                    label: 'Undo',
+                    onPressed: () {
+                      deepCopyBackToReminders();
+                      generateNotification(currentTask); //TODO: This will cause an onslaught of notifications if it's a repeat every number based notification
+                      //It will reschedule all the notifications since its initial creation, so to catch up it will notify the user the same number of times it has fired since
+                      //the user deleted it and undid the deletion. To get around this you would need to create an exact copy of the reminder object. But for its start date of notification
+                      //it must line up with what the next notification date should've been. You can calculate this by comparing the start date, the repeat every number, finding how many
+                      //times it should have fired and resetting the start date of the reminder object to what the next notification date of the delete notification should have been.
+                      setState(() {
+                        taskList = getTaskList();
+                      });
+                      writeChangesToFile();
+                    },
+                  )));
               setState(() {
                 if (reminders.length == 0) {
                   appBarColor = Colors.blue;
