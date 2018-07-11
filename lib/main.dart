@@ -93,7 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
               reminders.remove(currentTask);
               cancelSpecificReminder(currentTask);
               writeChangesToFile();
-              organizeByCreationDate(reminders);
               Scaffold.of(context).showSnackBar(SnackBar(
                   duration: Duration(seconds: 2),
                   content: Text('Removed ' + ' "${currentTask.cardTitle}" '),
