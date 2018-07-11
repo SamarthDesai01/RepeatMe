@@ -17,7 +17,7 @@ class Reminder {
   DateTime _specificDate; //Specific DateTime object
   DateTime _reminderTime; //Scheduled time to show reminders, for number and date based this holds complete information of start date and time, else only time of reminder
 
-  int _notificationID; //Unique id to use for this Reminder object, usually passed in as a UNIX timestamp
+  int _notificationID; //Unique id to use for this Reminder object, passed in as a unix timestamp with the first and last two digits remone
 
   Reminder(this._cardTitle, this._cardSubText, this._cardColor, this._cardAccent, this._reminderType, this._enabledDays, this._repeatEvery, this._repeatStartDate,
       this._specificDate, this._reminderTime, this._notificationID);
