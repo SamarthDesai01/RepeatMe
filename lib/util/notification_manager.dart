@@ -130,10 +130,7 @@ void rescheduleNotification(Reminder remind) {
   if (remindType == weekdayID) {
     generateNotification(remind); //Reschedule weekday reminders by default, won't cause repeat notif bug
   } else if (remindType == numberID) {
-    print('Found number based');
     for (int i = 0; i < repeatNotifCount + 1; i++) {
-      print('Entered Loop');
-      print(repeatStartDate);
       //Account for the original starting reminder so loop once more
       //Only reschedule the remaining reminders for that cancelled notification
       if (repeatStartDate.isAfter(DateTime.now()) && i != repeatNotifCount - 1) {
