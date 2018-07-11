@@ -30,7 +30,7 @@ class _AddTaskState extends State<AddTask> {
   int _repeatEveryNumber; //Number holding the input for the 'Repeat Every' text box, used for number based reminders
   DateTime _whenToRepeat; //Hold the DateTime object for reminders on specific days, only for 'Date' use
   DateTime _repeatStartDate; //When to start number based reminders
-  DateTime _reminderTime; //Mainly for use for retrieving the time, but for number and date based reminders it holds complete data
+  DateTime _reminderTime; //Mainly for use for retrieving the time, but for number and date based reminders it holds complete data, deprecated, now getReminderTime(); handles time input
   TimeOfDay _timeFromPicker; //The raw TimeOfDay object the time picker returns
 
   Color _previewCardColor;
@@ -79,6 +79,7 @@ class _AddTaskState extends State<AddTask> {
     }
   }
 
+  //Combine the users chosen time with the correct start date from each options respective datetime variable
   DateTime getReminderTime() {
     if (_choiceChipValue == 0) {
       //For weekday based, return DateTime.now() + _timeFromPicker
@@ -504,12 +505,14 @@ class _AddTaskState extends State<AddTask> {
                       onPressed: !(_currentTaskSubTextNoTime.length > 1) //If button subtext exists, so does valid input, thus enable the button if true
                           ? null
                           : () async {
-                              var uniqueID = int.parse(((DateTime.now().millisecondsSinceEpoch/100).toInt()).toString().substring(2)); //Remove first two and last two digits from unix timestamp so digit fits inside a Java int and so we count by tenths of a second
+                              //uniqueID is calculated as such. Create a unix timestamp that's based off of Jan 1, 2018. Then divide by 100 to count by tenths of a second (avoid notificationID collisions due to creation times being close to each other)
+                              //then grab the substring starting from char of index of 1, then convert back to int. In 68 years this will break and notification IDs will no longer fit inside a java int. 
+                              var uniqueID = int.parse((((DateTime.now().millisecondsSinceEpoch - 1514786400000)/100).toInt()).toString().substring(1)); //Remove first two and last two digits from unix timestamp so digit fits inside a Java int and so we count by tenths of a second
                               //Will help to avoid more collisions as opposed to counting by seconds.
                               //TODO: When scheduling repeat notifications, rapidly in succession, the notificationIDs may collide, find a way to encode uniqueID so that they indicate
                               //chronological order, but can also avoid collisions. Most users won't spam notifications rapidly so mostly a non issue, however it's still a very possible bug
 
-                              if (_whenToRepeat == null) {
+                              if (_whenToRepeat == null) { //Number based reminders will default to starting today as a result.
                                 //Only initialized if specific date chosen, make sure to assign it a value so it doesn't cause JSON parsing issues
                                 _whenToRepeat = DateTime.now().toLocal();
                               }
