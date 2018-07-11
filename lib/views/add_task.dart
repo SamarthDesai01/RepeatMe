@@ -507,7 +507,7 @@ class _AddTaskState extends State<AddTask> {
                           : () async {
                               //uniqueID is calculated as such. Create a unix timestamp that's based off of Jan 1, 2018. Then divide by 100 to count by tenths of a second (avoid notificationID collisions due to creation times being close to each other)
                               //then grab the substring starting from char of index of 1, then convert back to int. In 2025 this will break and notification IDs organizing by creation date won't fully work. 
-                              var uniqueID = int.parse((((DateTime.now().millisecondsSinceEpoch - 1514786400000)/100).toInt()).toString().substring(1)); //Remove first two and last two digits from unix timestamp so digit fits inside a Java int and so we count by tenths of a second
+                              var uniqueID = ((DateTime.now().millisecondsSinceEpoch - 1514786400000)/100).toInt(); //Remove first two and last two digits from unix timestamp so digit fits inside a Java int and so we count by tenths of a second
                               if (uniqueID > 2147483647){ //Make sure the app doesn't crash and burn if we exceed a java int
                                 uniqueID-= 2147483647; //Will cause an issue in 2025 where organizing by creation date will cause notifs created past 2025 will come first versus notifications made before then. 
 
