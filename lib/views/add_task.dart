@@ -504,7 +504,11 @@ class _AddTaskState extends State<AddTask> {
                       onPressed: !(_currentTaskSubTextNoTime.length > 1) //If button subtext exists, so does valid input, thus enable the button if true
                           ? null
                           : () async {
-                              var uniqueID = DateTime.now().hashCode;
+                              var uniqueID = int.parse(((DateTime.now().millisecondsSinceEpoch/100).toInt()).toString().substring(2)); //Remove first two and last two digits from unix timestamp so digit fits inside a Java int and so we count by tenths of a second
+                              //Will help to avoid more collisions as opposed to counting by seconds.
+                              //TODO: When scheduling repeat notifications, rapidly in succession, the notificationIDs may collide, find a way to encode uniqueID so that they indicate
+                              //chronological order, but can also avoid collisions. Most users won't spam notifications rapidly so mostly a non issue, however it's still a very possible bug
+
                               if (_whenToRepeat == null) {
                                 //Only initialized if specific date chosen, make sure to assign it a value so it doesn't cause JSON parsing issues
                                 _whenToRepeat = DateTime.now().toLocal();
