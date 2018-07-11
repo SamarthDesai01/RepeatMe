@@ -107,7 +107,7 @@ void cancelSpecificReminder(Reminder remind) {
   if (remind.reminderType == weekdayID || remind.reminderType == dateID)
     flutterLocalNotificationsPlugin.cancel(notificationID);
   else if (remind.reminderType == numberID) {
-    for (int i = 0; i < repeatNotifCount; i++) {
+    for (int i = 0; i < repeatNotifCount + 1; i++) {
       flutterLocalNotificationsPlugin.cancel(notificationID);
       notificationID++;
     }
