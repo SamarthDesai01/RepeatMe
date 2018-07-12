@@ -157,6 +157,41 @@ class _MyHomePageState extends State<MyHomePage> {
             'Tasks',
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
           ),
+          actions: <Widget>[
+            new PopupMenuButton<String>(
+              onSelected: (String organizeType){
+                setState(() {
+                  if(organizeType == 'alpha'){
+                    reminders = organizeByAlphabet(reminders);      
+                  }else if(organizeType ==  'color'){
+                    reminders = organizeByColor(reminders);
+                  }else if(organizeType == 'date'){
+                    reminders = organizeByCreationDate(reminders);
+                  }
+                  writeChangesToFile();
+                  taskList = getTaskList();
+                });
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: null,
+                  child: const Text('Sort by:'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'alpha',
+                  child: const Text('Alphabetical'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'color',
+                  child: const Text('Color'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'date',
+                  child: const Text('Creation Date'),
+                ),
+              ],
+            ),
+          ],
           centerTitle: false,
           automaticallyImplyLeading: false, //Removes the back button from appearing
         ),
