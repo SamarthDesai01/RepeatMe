@@ -35,20 +35,43 @@ class WeekdayPicker extends StatefulWidget {
     return [_sundayEnable, _mondayEnable, _tuesdayEnable, _wednesdayEnable, _thursdayEnable, _fridayEnable, _saturdayEnable];
   }
 
-  //Return a string to let the user know which days the reminder will repeat
+  int getNumberOfEnabledDays(){
+    int numEnabled = 0;
+    List<bool> enabledDays = getEnabledDays();
+    for(int i = 0; i < enabledDays.length; i++){
+      if(enabledDays[i] == true)
+        numEnabled++;
+    }
+    return numEnabled;
+  }
+
+  //Return a string to let the user know which days the reminder will repeat, 
   String getWeekdayString() {
     List<bool> enabledDays = this.getEnabledDays();
     List<String> weekdays = new List();
-    if (enabledDays[0]) weekdays.add('Sundays');
-    if (enabledDays[1]) weekdays.add('Mondays');
-    if (enabledDays[2]) weekdays.add('Tuesdays');
-    if (enabledDays[3]) weekdays.add('Wednesdays');
-    if (enabledDays[4]) weekdays.add('Thursdays');
-    if (enabledDays[5]) weekdays.add('Fridays');
-    if (enabledDays[6]) weekdays.add('Saturdays');
-    if (enabledDays.every((e) => e == true)) return 'Every day';
+    int numEnabled = getNumberOfEnabledDays();
+    if(numEnabled > 3 && numEnabled < 7){ //To prevent overflow on smaller devices, make the weekday text an acronym
+      if (enabledDays[0]) weekdays.add('S');
+      if (enabledDays[1]) weekdays.add('M');
+      if (enabledDays[2]) weekdays.add('T');
+      if (enabledDays[3]) weekdays.add('W');
+      if (enabledDays[4]) weekdays.add('Th');
+      if (enabledDays[5]) weekdays.add('F');
+      if (enabledDays[6]) weekdays.add('S');
+      return weekdays.join(" | "); //Exp output S | M | T
+    } else{
+      if (enabledDays[0]) weekdays.add('Sundays');
+      if (enabledDays[1]) weekdays.add('Mondays');
+      if (enabledDays[2]) weekdays.add('Tuesdays');
+      if (enabledDays[3]) weekdays.add('Wednesdays');
+      if (enabledDays[4]) weekdays.add('Thursdays');
+      if (enabledDays[5]) weekdays.add('Fridays');
+      if (enabledDays[6]) weekdays.add('Saturdays');
+      if (enabledDays.every((e) => e == true)) return 'Every day'; //If all days are enabled return a cleaner string
+      return weekdays.join(", ");
+    }
     print(weekdays.join(','));
-    return weekdays.join(", ");
+
   }
 
   //Redraw the picker with the new colors
