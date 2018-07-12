@@ -308,7 +308,7 @@ class _AddTaskState extends State<AddTask> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Add Task'),
+          title: Text('Add Reminder'),
           backgroundColor: _previewCardColor,
         ),
         body: new Padding(

@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: appBarColor,
           elevation: 3.0,
           title: Text(
-            'Tasks',
+            'Reminders',
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
           ),
           actions: <Widget>[
