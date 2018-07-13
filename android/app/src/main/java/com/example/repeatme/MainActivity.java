@@ -1,4 +1,4 @@
-package com.example.repeatme;
+package com.samarthdesai.repeatme;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
