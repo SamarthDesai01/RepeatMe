@@ -58,6 +58,9 @@ void generateNotification(Reminder reminder) async {
     //Code for number based reminders
     if (repeatEvery != 0 && repeatEvery > 0) {
       //Double check no one pasted in outside text, only allow positive numbers larger than 0
+
+      repeatStartDate = reminderTime;
+
       await flutterLocalNotificationsPlugin.schedule(
           //Schedule the first notification on the specified start date
           notificationID,
@@ -66,7 +69,7 @@ void generateNotification(Reminder reminder) async {
           repeatStartDate,
           platformChannelSpecifics);
 
-      repeatStartDate = reminderTime; //Reminder time contains both repeat start date and specified start time,
+       //Reminder time contains both repeat start date and specified start time,
 
       for (int i = 0; i < repeatNotifCount; i++) {
         notificationID++; //Keep this here, or else notifIDs will collide and cause the last warning notif to not display.
