@@ -30,7 +30,8 @@ class _AddTaskState extends State<AddTask> {
   int _repeatEveryNumber; //Number holding the input for the 'Repeat Every' text box, used for number based reminders
   DateTime _whenToRepeat; //Hold the DateTime object for reminders on specific days, only for 'Date' use
   DateTime _repeatStartDate; //When to start number based reminders
-  DateTime _reminderTime; //Mainly for use for retrieving the time, but for number and date based reminders it holds complete data, deprecated, now getReminderTime(); handles time input
+  DateTime
+      _reminderTime; //Mainly for use for retrieving the time, but for number and date based reminders it holds complete data, deprecated, now getReminderTime(); handles time input
   TimeOfDay _timeFromPicker; //The raw TimeOfDay object the time picker returns
 
   Color _previewCardColor;
@@ -98,7 +99,7 @@ class _AddTaskState extends State<AddTask> {
   //Add the time at the end of the card TODO: RENAME THIS METHOD TO BETTER REFLECT FUNCTIONALITY
   void updateSubText() {
     setState(() {
-      if (_timeFromPicker.hour == 0 && _timeFromPicker.minute == 0) {
+      if (_timeFromPicker.hour == 0 && _timeFromPicker.minute == 1) {
         //Current time is 12:00 AM, no need to include time text
         _currentTaskSubText = _currentTaskSubTextNoTime;
       } else {
@@ -286,7 +287,7 @@ class _AddTaskState extends State<AddTask> {
     _enabledDays = picker.getEnabledDays();
     _repeatStartDate = DateTime.now().toLocal();
     _reminderTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); //Initialize reminder time with reminder time at very start of the day
-    _timeFromPicker = TimeOfDay(hour: 0, minute: 0); //Default to 12AM as our input from the time picker
+    _timeFromPicker = TimeOfDay(hour: 0, minute: 1); //Default to 12AM as our input from the time picker
     getReminders(); //Update our reminders array to add to later on
 
     super.initState();
@@ -506,15 +507,19 @@ class _AddTaskState extends State<AddTask> {
                           ? null
                           : () async {
                               //uniqueID is calculated as such. Create a unix timestamp that's based off of Jan 1, 2018. Then divide by 100 to count by tenths of a second (avoid notificationID collisions due to creation times being close to each other)
-                              //In 2025 this will break and notification IDs organizing by creation date won't fully work. 
-                              var uniqueID = ((DateTime.now().millisecondsSinceEpoch - 1514786400000)/100).toInt(); //Remove first two and last two digits from unix timestamp so digit fits inside a Java int and so we count by tenths of a second
-                              if (uniqueID > 2147483647){ //Make sure the app doesn't crash and burn if we exceed a java int
-                                uniqueID-= 2147483647; //Will cause an issue in 2025 where organizing by creation date will cause notifs created past 2025 will come first versus notifications made before then. 
+                              //In 2025 this will break and notification IDs organizing by creation date won't fully work.
+                              var uniqueID = ((DateTime.now().millisecondsSinceEpoch - 1514786400000) / 100)
+                                  .toInt(); //Remove first two and last two digits from unix timestamp so digit fits inside a Java int and so we count by tenths of a second
+                              if (uniqueID > 2147483647) {
+                                //Make sure the app doesn't crash and burn if we exceed a java int
+                                uniqueID -=
+                                    2147483647; //Will cause an issue in 2025 where organizing by creation date will cause notifs created past 2025 will come first versus notifications made before then.
 
                               }
                               //TODO: When scheduling repeat notifications, rapidly in succession, the notificationIDs may collide, find a way to encode uniqueID so that they indicate
                               //chronological order, but can also avoid collisions. Most users won't spam new tasks rapidly so mostly a non issue, however it's still a very possible bug
-                              if (_whenToRepeat == null) { //Number based reminders will default to starting today as a result.
+                              if (_whenToRepeat == null) {
+                                //Number based reminders will default to starting today as a result.
                                 //Only initialized if specific date chosen, make sure to assign it a value so it doesn't cause JSON parsing issues
                                 _whenToRepeat = DateTime.now().toLocal();
                               }
