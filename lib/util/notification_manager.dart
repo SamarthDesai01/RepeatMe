@@ -30,6 +30,7 @@ void generateNotification(Reminder reminder) async {
   DateTime reminderTime = reminder.reminderTime;
 
   Time defaultTime = Time(reminderTime.hour, reminderTime.minute, 0);
+  print(reminderTime);
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
@@ -41,17 +42,21 @@ void generateNotification(Reminder reminder) async {
     if (enabledDays[0])
       await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID, notificationTitle, notificationBody, Day.Sunday, defaultTime, platformChannelSpecifics);
     if (enabledDays[1])
-      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID, notificationTitle, notificationBody, Day.Monday, defaultTime, platformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID + 1, notificationTitle, notificationBody, Day.Monday, defaultTime, platformChannelSpecifics);
     if (enabledDays[2])
-      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID, notificationTitle, notificationBody, Day.Tuesday, defaultTime, platformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          notificationID + 2, notificationTitle, notificationBody, Day.Tuesday, defaultTime, platformChannelSpecifics);
     if (enabledDays[3])
-      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID, notificationTitle, notificationBody, Day.Wednesday, defaultTime, platformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          notificationID + 3, notificationTitle, notificationBody, Day.Wednesday, defaultTime, platformChannelSpecifics);
     if (enabledDays[4])
-      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID, notificationTitle, notificationBody, Day.Thursday, defaultTime, platformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          notificationID + 4, notificationTitle, notificationBody, Day.Thursday, defaultTime, platformChannelSpecifics);
     if (enabledDays[5])
-      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID, notificationTitle, notificationBody, Day.Friday, defaultTime, platformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID + 5, notificationTitle, notificationBody, Day.Friday, defaultTime, platformChannelSpecifics);
     if (enabledDays[6])
-      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(notificationID, notificationTitle, notificationBody, Day.Saturday, defaultTime, platformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          notificationID + 6, notificationTitle, notificationBody, Day.Saturday, defaultTime, platformChannelSpecifics);
   } //Weekday reminder
 
   if (reminderType == numberID) {
@@ -59,8 +64,8 @@ void generateNotification(Reminder reminder) async {
     if (repeatEvery != 0 && repeatEvery > 0) {
       //Double check no one pasted in outside text, only allow positive numbers larger than 0
 
-      repeatStartDate = reminderTime;
-      print(repeatStartDate.toString());
+      repeatStartDate = reminderTime; //Reminder time contains both repeat start date and specified start time,
+
       await flutterLocalNotificationsPlugin.schedule(
           //Schedule the first notification on the specified start date
           notificationID,
@@ -69,7 +74,6 @@ void generateNotification(Reminder reminder) async {
           repeatStartDate,
           platformChannelSpecifics);
 
-       //Reminder time contains both repeat start date and specified start time,
       for (int i = 0; i < repeatNotifCount; i++) {
         notificationID++; //Keep this here, or else notifIDs will collide and cause the last warning notif to not display.
         repeatStartDate = repeatStartDate.add(Duration(days: repeatEvery));
@@ -106,13 +110,17 @@ void cancelSpecificReminder(Reminder remind) {
 
   int notificationID = remind.notificationID;
 
-  if (remind.reminderType == weekdayID || remind.reminderType == dateID)
-    flutterLocalNotificationsPlugin.cancel(notificationID);
+  if (remind.reminderType == weekdayID)
+    for (int i = 0; i < 7; i++) {
+      flutterLocalNotificationsPlugin.cancel(notificationID + i);
+    }
   else if (remind.reminderType == numberID) {
     for (int i = 0; i < repeatNotifCount + 1; i++) {
       flutterLocalNotificationsPlugin.cancel(notificationID);
       notificationID++;
     }
+  } else {
+    flutterLocalNotificationsPlugin.cancel(notificationID);
   }
 }
 
