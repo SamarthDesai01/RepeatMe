@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:material_color_picker/material_color_picker.dart';
+//import 'package:material_color_picker/material_color_picker.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:repeat_me/data/reminder.dart';
 import 'package:repeat_me/main.dart';
 import 'package:repeat_me/util/notification_manager.dart';
@@ -44,6 +45,53 @@ class _AddTaskState extends State<AddTask> {
   int _specificDayChipIndex = 2; //Remind on a specific day
 
   WeekdayPicker picker; //Weekday picker
+
+  ColorSwatch _tempMainColor;
+  Color _tempShadeColor;
+  Color _mainColor = Colors.blue;
+  Color _shadeColor = Colors.blue[800];
+
+  void _openDialog(String title, Widget content) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+            contentPadding: const EdgeInsets.all(6.0),
+            title: Text(title),
+            content: content,
+            actions: [
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('SUBMIT'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() => _previewCardColor = _tempMainColor);
+                  //setState(() => _previewCardColor = _tempShadeColor);
+                },
+              ),
+            ],
+          ),
+    );
+  }
+
+  void _openColorPicker() async {
+    _openDialog(
+      "Color picker",
+      MaterialColorPicker(
+        allowShades: false,
+        selectedColor: _shadeColor,
+        onColorChange: (color) => setState(() => _tempShadeColor = color),
+        onMainColorChange: (color) {
+          setState(() => _tempMainColor = color);
+          picker.reDraw(color);
+        },
+      ),
+    );
+  }
 
   //Method to create the datepicker dialog
   Future<Null> _selectDate(BuildContext context, int remindType) async {
@@ -463,31 +511,33 @@ class _AddTaskState extends State<AddTask> {
                       'Pick Color',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () {
-                      Color startColor;
-                      Future<Color> askedToLead() async => await showDialog(
-                            context: context,
-                            child: new SimpleDialog(
-                              title: const Text('Pick color'),
-                              children: <Widget>[
-                                new ColorPicker(
-                                  type: MaterialType.transparency,
-                                  onColor: (color) {
-                                    setState(() {
-                                      _previewCardColor = color;
-                                      picker.reDraw(color); //Update colors to reflect new picked color
-                                    });
-                                    Navigator.pop(context, color);
-                                  },
-                                  currentColor: startColor,
-                                ),
-                              ],
-                            ),
-                          );
-
-                      askedToLead(); //Call the color picker dialog
-                    },
-                  )
+                    onPressed: _openColorPicker,
+//                    onPressed: () {
+//                      Color startColor;
+//                      Future<Color> askedToLead() async => await showDialog(
+//                            context: context,
+//                            child: new SimpleDialog(
+//                              title: const Text('Pick color'),
+//                              children: <Widget>[
+//                                new ColorPicker(
+//                                  type: MaterialType.transparency,
+//                                  onColor: (color) {
+//                                    setState(() {
+//                                      _previewCardColor = color;
+//                                      picker.reDraw(color); //Update colors to reflect new picked color
+//                                    });
+//                                    Navigator.pop(context, color);
+//                                  },
+//                                  currentColor: startColor,
+//                                ),
+//                              ],
+//                            ),
+//                          );
+//
+//                      askedToLead(); //Call the color picker dialog
+//                    },
+//                  )
+                  ),
                 ],
               ),
               Center(
