@@ -1,8 +1,7 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=C:\Users\asus\Documents\flutter
-FLUTTER_APPLICATION_PATH=C:\Users\asus\Documents\Projects\Flutter Projects\RepeatMe\repeat_me
+FLUTTER_APPLICATION_PATH=C:\Users\asus\Documents\GitHub\RepeatMe
 FLUTTER_TARGET=lib/main.dart
-FLUTTER_BUILD_MODE=debug
 FLUTTER_BUILD_DIR=build
 SYMROOT=${SOURCE_ROOT}/../build\ios
 FLUTTER_FRAMEWORK_DIR=C:\Users\asus\Documents\flutter\bin\cache\artifacts\engine\ios
