@@ -6,7 +6,7 @@ import 'package:repeat_me/views/add_task.dart';
 import 'package:repeat_me/util/notification_manager.dart';
 import 'package:repeat_me/util/organize_list.dart';
 import 'package:repeat_me/data/reminder.dart';
-import 'package:repeat_me/widgets/task.dart';
+import 'package:repeat_me/widgets/task_full.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final String reminderKey = 'userReminders';
@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
             background: Container(color: Colors.transparent),
             child: Padding(
               padding: EdgeInsets.only(top: 12.0),
-              child: TaskCard(currentTask.cardTitle, currentTask.cardSubText, currentTask.cardColor, currentTask.cardAccent),
+              child: Task(currentTask,currentTask.cardTitle, currentTask.cardSubText, currentTask.cardColor, currentTask.cardAccent),
             ),
           );
         },
