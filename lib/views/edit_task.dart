@@ -28,6 +28,7 @@ class _EditTaskState extends State<EditTask> {
 
   _EditTaskState(this._remainder);
   TextEditingController _controller;
+  TextEditingController _controllerRepeatEvery;
 
   String _currentTaskName;// = _remainder.cardTitle; //Card title
   String _currentTaskSubText; //Card subtext
@@ -103,7 +104,7 @@ class _EditTaskState extends State<EditTask> {
   Future<Null> _selectDate(BuildContext context, int remindType) async {
     final DateTime picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(Duration(days: 1)),
+      initialDate: _whenToRepeat,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(Duration(days: 365)),
     );
@@ -251,6 +252,7 @@ class _EditTaskState extends State<EditTask> {
           Expanded(
             child: TextField(
               //Repeat Days entry field
+              controller: _controllerRepeatEvery,
               keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
               maxLength: 3,
               maxLengthEnforced: true,
@@ -334,17 +336,21 @@ class _EditTaskState extends State<EditTask> {
     _currentTaskSubTextNoTime = '';
     _previewCardColor = _remainder.cardColor; //The default theme color
     _previewCardAccent = Colors.white10; //Set to transparent white so InkWells for all taps look normal
-    _choiceChipValue = 0; //Set to 0, so that the weekday chip is enabled by default
+    _choiceChipValue = _remainder.reminderType;//Set to 0, so that the weekday chip is enabled by default
 
     picker.resetState();
     picker.reloadState(_remainder.enabledDays);
-    // picker.reDraw(_previewCardColor); //Redraw the picker with enabled
+    picker.reDraw(_previewCardColor); //Redraw the picker with enabled
 
     _repeatEveryIcon = Colors.grey;
     _enabledDays = _remainder.enabledDays;
     _repeatStartDate = _remainder.repeatStartDate;
-    _reminderTime = _remainder.reminderTime; 
-    _timeFromPicker = TimeOfDay(hour: _remainder.reminderTime.hour, minute: _remainder.reminderTime.minute);
+    _reminderTime = _remainder.reminderTime;
+    _timeFromPicker = TimeOfDay(hour: _remainder.reminderTime.hour, minute: _remainder.reminderTime.minute); 
+    _repeatEveryNumber=_remainder.repeatEvery;
+    _whenToRepeat=_remainder.specificDate;
+    _controllerRepeatEvery = new TextEditingController(text:_remainder.repeatEvery.toString());
+
     getReminders(); //Update our reminders array to add to later on
 
     super.initState();
@@ -356,10 +362,8 @@ class _EditTaskState extends State<EditTask> {
       //Generate the weekday picker subtext on redraw if weekdays option is selected
       _currentTaskSubTextNoTime = picker.getWeekdayString();
       updateSubText();
-    } else if (_choiceChipValue == 1) {
-      _currentTaskSubText;
-    }
-
+    } 
+    
     return Theme(
       data: ThemeData(
         primaryColor: _previewCardColor,
@@ -437,7 +441,7 @@ class _EditTaskState extends State<EditTask> {
                   ),
                   new ChoiceChip(
                     //Number Chip
-                    label: Text('Number'),
+                    label: Text('No of Days'),
                     selected: _choiceChipValue == _numberChipIndex,
                     onSelected: (bool selected) {
                       setState(() {

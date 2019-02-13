@@ -347,8 +347,6 @@ class _AddTaskState extends State<AddTask> {
       //Generate the weekday picker subtext on redraw if weekdays option is selected
       _currentTaskSubTextNoTime = picker.getWeekdayString();
       updateSubText();
-    } else if (_choiceChipValue == 1) {
-      _currentTaskSubText;
     }
 
     return Theme(
@@ -427,7 +425,7 @@ class _AddTaskState extends State<AddTask> {
                   ),
                   new ChoiceChip(
                     //Number Chip
-                    label: Text('Number'),
+                    label: Text('No of Days'),
                     selected: _choiceChipValue == _numberChipIndex,
                     onSelected: (bool selected) {
                       setState(() {
