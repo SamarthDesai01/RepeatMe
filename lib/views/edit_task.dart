@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:material_color_picker/material_color_picker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:repeat_me/data/reminder.dart';
 import 'package:repeat_me/main.dart';
@@ -42,6 +41,7 @@ class _EditTaskState extends State<EditTask> {
       _reminderTime; //Mainly for use for retrieving the time, but for number and date based reminders it holds complete data, deprecated, now getReminderTime(); handles time input
   TimeOfDay _timeFromPicker; //The raw TimeOfDay object the time picker returns
 
+  int _notificationIdPrevious;
   Color _previewCardColor;
   Color _previewCardAccent;
   Color _repeatEveryIcon;
@@ -350,6 +350,7 @@ class _EditTaskState extends State<EditTask> {
     _repeatEveryNumber=_remainder.repeatEvery;
     _whenToRepeat=_remainder.specificDate;
     _controllerRepeatEvery = new TextEditingController(text:_remainder.repeatEvery.toString());
+    _notificationIdPrevious=_remainder.notificationID;
 
     getReminders(); //Update our reminders array to add to later on
 
@@ -570,16 +571,6 @@ class _EditTaskState extends State<EditTask> {
                       onPressed: !(_currentTaskSubTextNoTime.length > 1) //If button subtext exists, so does valid input, thus enable the button if true
                           ? null
                           : () async {
-                              //uniqueID is calculated as such. Create a unix timestamp that's based off of Jan 1, 2018. Then divide by 100 to count by tenths of a second (avoid notificationID collisions due to creation times being close to each other)
-                              //In 2025 this will break and notification IDs organizing by creation date won't fully work.
-                              var uniqueID = ((DateTime.now().millisecondsSinceEpoch - 1514786400000) / 100)
-                                  .toInt(); //Remove first two and last two digits from unix timestamp so digit fits inside a Java int and so we count by tenths of a second
-                              if (uniqueID > 2147483647) {
-                                //Make sure the app doesn't crash and burn if we exceed a java int
-                                uniqueID -=
-                                    2147483647; //Will cause an issue in 2025 where organizing by creation date will cause notifs created past 2025 will come first versus notifications made before then.
-
-                              }
                               //TODO: When scheduling repeat notifications, rapidly in succession, the notificationIDs may collide, find a way to encode uniqueID so that they indicate
                               //chronological order, but can also avoid collisions. Most users won't spam new tasks rapidly so mostly a non issue, however it's still a very possible bug
                               if (_whenToRepeat == null) {
@@ -588,15 +579,11 @@ class _EditTaskState extends State<EditTask> {
                                 _whenToRepeat = DateTime.now().toLocal();
                               }
                               var newReminder = Reminder(_currentTaskName, _currentTaskSubText, _previewCardColor, _previewCardAccent, _choiceChipValue,
-                                  picker.getEnabledDays(), _repeatEveryNumber, _repeatStartDate, _whenToRepeat, getReminderTime(), uniqueID);
-                              var oldRemainder = _remainder;
-                              // Reminder(_currentTaskName, _currentTaskSubText, _previewCardColor, _previewCardAccent, _choiceChipValue,
-                              //     picker.getEnabledDays(), _repeatEveryNumber, _repeatStartDate, _whenToRepeat, getReminderTime(), _remainder.notificationID);
-                              
-                              reminders.remove(oldRemainder); //Add new reminder to current list of reminders
+                                  picker.getEnabledDays(), _repeatEveryNumber, _repeatStartDate, _whenToRepeat, getReminderTime(), _notificationIdPrevious);
+                              reminders.removeWhere((remind) => remind.notificationID==_notificationIdPrevious);
+                              rescheduleNotification(newReminder);                            
+                              rescheduleNotification(newReminder);
                               reminders.add(newReminder);
-                              generateNotification(newReminder); //Set a notification based on this reminder
-                              cancelSpecificReminder(oldRemainder);
                               writeChangesToFile(); //Migrate changes to local storage
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage(), maintainState: false)); //Navigate back to home screen
                             },
