@@ -364,7 +364,7 @@ class _EditTaskState extends State<EditTask> {
       _currentTaskSubTextNoTime = picker.getWeekdayString();
       updateSubText();
     } else{
-      _currentTaskSubTextNoTime=_currentTaskSubText;
+      _currentTaskSubTextNoTime =_currentTaskSubText;
     }
     
     return Theme(
@@ -584,7 +584,6 @@ class _EditTaskState extends State<EditTask> {
                                   picker.getEnabledDays(), _repeatEveryNumber, _repeatStartDate, _whenToRepeat, getReminderTime(), _notificationIdPrevious);
                               reminders.removeWhere((remind) => remind.notificationID==_notificationIdPrevious);
                               rescheduleNotification(newReminder);                            
-                              rescheduleNotification(newReminder);
                               reminders.add(newReminder);
                               writeChangesToFile(); //Migrate changes to local storage
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage(), maintainState: false)); //Navigate back to home screen
