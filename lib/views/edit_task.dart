@@ -363,7 +363,9 @@ class _EditTaskState extends State<EditTask> {
       //Generate the weekday picker subtext on redraw if weekdays option is selected
       _currentTaskSubTextNoTime = picker.getWeekdayString();
       updateSubText();
-    } 
+    } else{
+      _currentTaskSubTextNoTime=_currentTaskSubText;
+    }
     
     return Theme(
       data: ThemeData(
