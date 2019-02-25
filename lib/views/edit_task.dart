@@ -444,7 +444,7 @@ class _EditTaskState extends State<EditTask> {
                   ),
                   new ChoiceChip(
                     //Number Chip
-                    label: Text('No of Days'),
+                    label: Text('No. of Days'),
                     selected: _choiceChipValue == _numberChipIndex,
                     onSelected: (bool selected) {
                       setState(() {
