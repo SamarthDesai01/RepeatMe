@@ -130,6 +130,39 @@ class WeekdayPicker extends StatefulWidget {
     _iconGrey = Colors.grey[400];
   }
 
+  void reloadState(List<bool> enabledDays) {
+    for(int i=0; i < enabledDays.length; i++){
+      if(i==0 && enabledDays.elementAt(i)){
+        _sundayEnable = true;
+        _sundayColor = Colors.blue;
+      }
+      if(i==1 && enabledDays.elementAt(i)){
+        _mondayEnable = true;
+        _mondayColor = Colors.blue;
+      }
+      if(i==2 && enabledDays.elementAt(i)){
+        _tuesdayEnable = true;
+        _tuesdayColor = Colors.blue;
+      }
+      if(i==3 && enabledDays.elementAt(i)){
+        _wednesdayEnable = true;
+        _wednesdayColor = Colors.blue;
+      }
+      if(i==4 && enabledDays.elementAt(i)){
+        _thursdayEnable = true;
+        _thursdayColor = Colors.blue;
+      }
+      if(i==5 && enabledDays.elementAt(i)){
+        _fridayEnable = true;
+        _fridayColor = Colors.blue;
+      }
+      if(i==6 && enabledDays.elementAt(i)){
+        _saturdayEnable = true;
+        _saturdayColor = Colors.blue;
+      }
+    }
+  }
+
   @override
   _WeekdayPickerState createState() => new _WeekdayPickerState();
 }
